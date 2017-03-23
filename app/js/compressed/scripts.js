@@ -1,0 +1,1 @@
+$(function(){function n(){1e3==n&&alert("nice")}var n=1e3;console.log(n)});

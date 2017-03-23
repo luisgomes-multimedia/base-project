@@ -1,0 +1,9 @@
+@import "normalize.css";
+
+body {
+   p {
+      color: black;
+      background-color: yellow;
+   }
+
+}
