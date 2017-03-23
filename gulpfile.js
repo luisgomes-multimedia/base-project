@@ -18,28 +18,22 @@ var gulp = require('gulp'),
       // Include files to concat here
       return gulp.src([ './app/js/lib/jquery.min.js' , './app/js/lib/teste1.js' , './app/js/lib/teste2.js' , './app/js/scripts.js'])
          .pipe(concat('bundle.min.js'))
+         .pipe(uglify())
          .pipe(gulp.dest('./dist/js'));
 
    });
 
    gulp.task('sprites', function () {
-     var spriteData = gulp.src('./app/img/png')
+     var spriteData = gulp.src('./app/img/png/*.png')
      .pipe(spritesmith({
        imgName: 'sprite.png',
        cssName: 'sprite.css',
-       imgPath: './app/img/sprite' + 'sprite.png'
-     }));
-    spriteData.css.pipe(gulp.dest(paths.build.css));
-    spriteData.img.pipe(gulp.dest(paths.build.images));
-});
-   // If not using proxy server uncomment this
-   //             |
-   //             v
 
-   // gulp.task('js-watch' , ['bundle'] , function(done){
-   //    browserSync.reload();
-   //    done();
-   // });
+     }));
+    spriteData.css.pipe(gulp.dest('./dist/styles'));
+    spriteData.img.pipe(gulp.dest('./app/img/sprite'));
+});
+
     gulp.task('compress', function (cb) {
         pump([
               gulp.src('./app/js/*.js'),
@@ -66,6 +60,11 @@ var gulp = require('gulp'),
 
      browserSync.init({
        notify: false ,
+
+    // If not using proxy server uncomment this
+    //             |
+    //             v
+
       //  server: {
       //    baseDir: ["./dist" , "./app"]
       // },
