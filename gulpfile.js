@@ -15,20 +15,34 @@ var gulp = require('gulp'),
     browserSync = require('browser-sync').create();
 
     gulp.task('bundle' , function(){
-      // Include files to concat here
-      return gulp.src([ './app/js/lib/jquery.min.js' , './app/js/lib/teste1.js' , './app/js/lib/teste2.js' , './app/js/scripts.js'])
-         .pipe(concat('bundle.min.js'))
+      // Include files to concat here by order
+      return gulp.src(['./app/js/lib/*.js'])
+         .pipe(concat('1_bundle.min.js'))
          .pipe(uglify())
          .pipe(gulp.dest('./dist/js'));
 
    });
+
+   // Task to compress all css files in 'to_compress' folder to ./dist/after_compress
+   gulp.task('compressCss' , function(){
+      return gulp.src('./app/css/to_compress/*.css')
+         .pipe(cssNano())
+         .pipe(gulp.dest('./dist/styles/after_compress'));
+   });
+
+   // Task to concat css files
+   gulp.task('concatCss' , function(){
+      return gulp.src('./app/css/to_concat/*.css')
+      .pipe(concat('bundle.css'))
+      .pipe(gulp.dest('./dist/styles/after_concat_task'));
+   });
+
 
    gulp.task('sprites', function () {
      var spriteData = gulp.src('./app/img/png/*.png')
      .pipe(spritesmith({
        imgName: 'sprite.png',
        cssName: 'sprite.css',
-
      }));
     spriteData.css.pipe(gulp.dest('./dist/styles'));
     spriteData.img.pipe(gulp.dest('./app/img/sprite'));
@@ -43,6 +57,19 @@ var gulp = require('gulp'),
           cb
         );
     });
+   //  task to minify and concat css files
+    gulp.task('minConcatCss' , function(){
+      return gulp.src('./app/css/to_concat/*.css')
+         .pipe(postcss([autoprefixer]))
+         .pipe(cssNano())
+         .on('error', function(errorInfo){
+          console.log(errorInfo.toString());
+          this.emit('end');
+        })
+        .pipe(concat('bundle.min.css'))
+        .pipe(gulp.dest('./dist/styles/after_concat_task'));
+   });
+
 
     gulp.task('styles', function(){
      return gulp.src('./app/postCss/styles.css')

@@ -1,9 +1,10 @@
 @import "normalize.css";
+@import "../../dist/styles/sprite.css";
 
 body {
    p {
       color: black;
-      background-color: yellow;
+      background-color: teal;
    }
 
 }
